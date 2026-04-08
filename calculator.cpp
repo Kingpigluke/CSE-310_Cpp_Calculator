@@ -1,10 +1,12 @@
 #include <iostream>
 #include <limits>
 #include <string>
-
+#include <vector>
 using namespace std;
 
-// Function to safely get a number from the user
+// =========================
+// Utility function for safe number input
+// =========================
 double getNumber(const string& prompt) {
     double num;
     while (true) {
@@ -21,52 +23,106 @@ double getNumber(const string& prompt) {
     }
 }
 
+// =========================
+// Class: Calculator
+// =========================
+class Calculator {
+public:
+    // Stores history of results (STL vector requirement)
+    vector<double> history;
+
+    double add(double a, double b) {
+        double r = a + b;
+        history.push_back(r);
+        return r;
+    }
+
+    double subtract(double a, double b) {
+        double r = a - b;
+        history.push_back(r);
+        return r;
+    }
+
+    double multiply(double a, double b) {
+        double r = a * b;
+        history.push_back(r);
+        return r;
+    }
+
+    double divide(double a, double b) {
+        if (b == 0) {
+            cout << "Error: Division by zero is not allowed.\n";
+            return 0;
+        }
+        double r = a / b;
+        history.push_back(r);
+        return r;
+    }
+
+    // Display stored results
+    void showHistory() {
+        if (history.empty()) {
+            cout << "No calculations performed yet.\n";
+            return;
+        }
+
+        cout << "\n=== Calculation History ===\n";
+        for (size_t i = 0; i < history.size(); i++) {
+            cout << i + 1 << ". " << history[i] << "\n";
+        }
+        cout << "===========================\n\n";
+    }
+};
+
+// =========================
+// Main Program
+// =========================
 int main() {
-    double num1, num2;
-    char op;
+    Calculator calc;
+    char choice;
 
-    cout << "=== Simple Calculator ===\n";
+    cout << "=== Simple C++ Calculator ===\n";
 
-    num1 = getNumber("Enter first number: ");
+    // LOOP requirement
+    do {
+        double num1 = getNumber("Enter first number: ");
 
-    cout << "Enter operator (+, -, *, /): ";
-    cin >> op;
+        cout << "Enter operator (+, -, *, /): ";
+        char op;
+        cin >> op;
 
-    num2 = getNumber("Enter second number: ");
+        double num2 = getNumber("Enter second number: ");
 
-    double result;
-    bool validOperation = true;
+        double result;
+        bool valid = true;
 
-    switch (op) {
-        case '+':
-            result = num1 + num2;
-            break;
+        // CONDITIONALS + SWITCH
+        switch (op) {
+            case '+': result = calc.add(num1, num2); break;
+            case '-': result = calc.subtract(num1, num2); break;
+            case '*': result = calc.multiply(num1, num2); break;
+            case '/': result = calc.divide(num1, num2); break;
+            default:
+                cout << "Invalid operator.\n";
+                valid = false;
+        }
 
-        case '-':
-            result = num1 - num2;
-            break;
+        if (valid) {
+            cout << "Result: " << result << "\n";
+        }
 
-        case '*':
-            result = num1 * num2;
-            break;
+        cout << "\nWould you like to see your calculation history? (y/n): ";
+        char show;
+        cin >> show;
+        if (show == 'y' || show == 'Y') {
+            calc.showHistory();
+        }
 
-        case '/':
-            if (num2 == 0) {
-                cout << "Error: Division by zero is not allowed.\n";
-                validOperation = false;
-            } else {
-                result = num1 / num2;
-            }
-            break;
+        cout << "Perform another calculation? (y/n): ";
+        cin >> choice;
 
-        default:
-            cout << "Error: Invalid operator.\n";
-            validOperation = false;
-    }
+    } while (choice == 'y' || choice == 'Y');
 
-    if (validOperation) {
-        cout << "Result: " << result << "\n";
-    }
-
+    cout << "Goodbye!\n";
     return 0;
 }
