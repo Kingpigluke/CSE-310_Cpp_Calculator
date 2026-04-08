@@ -1,2 +1,2 @@
-# CSE-310
-Depository for CSE 310 assingments
+# CSE-310 Sprint Module 1
+Depository for CSE 310 Module 1
